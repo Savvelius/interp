@@ -2,6 +2,7 @@ package lexer
 
 import "github.com/Savvelius/go-interp/token"
 
+// Moves lexer one token up. Returns lexed token or EOF token on end of input
 func (l *Lexer) NextToken() token.Token {
 	var tok token.Token
 
@@ -82,9 +83,9 @@ func newToken(tokenType token.TokenType, ch byte) token.Token {
 
 type Lexer struct {
 	input        string
-	position     int
-	readPosition int
-	ch           byte
+	position     int  // current index
+	readPosition int  // index of next token to be read
+	ch           byte // value at current index
 }
 
 func New(input string) *Lexer {
