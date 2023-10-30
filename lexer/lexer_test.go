@@ -27,7 +27,9 @@ func TestNextToken(t *testing.T) {
 	10 == 10;
 	10 != 9;
 	"foobar"
-	"foo bar"`
+	"foo bar"
+	[1, 2];
+	{1: 2, "hello": true}`
 	tests := []struct {
 		expectedType    token.TokenType
 		expectedLiteral string
@@ -112,8 +114,26 @@ func TestNextToken(t *testing.T) {
 
 		{token.STRING, "foobar"},
 		{token.STRING, "foo bar"},
+
+		{token.LBRACKET, "["},
+		{token.INT, "1"},
+		{token.COMMA, ","},
+		{token.INT, "2"},
+		{token.RBRACKET, "]"},
+		{token.SEMICOLON, ";"},
+
+		{token.LBRACE, "{"},
+		{token.INT, "1"},
+		{token.COLON, ":"},
+		{token.INT, "2"},
+		{token.COMMA, ","},
+		{token.STRING, "hello"},
+		{token.COLON, ":"},
+		{token.TRUE, "true"},
+		{token.RBRACE, "}"},
 		{token.EOF, ""},
 	}
+	// {1: 2, "hello": true}
 	l := New(input)
 
 	for i, tt := range tests {
