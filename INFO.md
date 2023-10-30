@@ -8,3 +8,5 @@ Operator in Expression can be reduced from string to enum
 
 in Token:
 Literal can be either part of TokenType enum or can be stored in a separate dictionary
+
+functiones have envs as map, unlike C++ where closures are classes
