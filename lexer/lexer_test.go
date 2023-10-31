@@ -6,6 +6,7 @@ import (
 	"github.com/Savvelius/go-interp/token"
 )
 
+// TODO: test for token.DOT for some reason didn't work
 func TestNextToken(t *testing.T) {
 	input := `let five = 5;
 	let ten = 10;
@@ -29,7 +30,8 @@ func TestNextToken(t *testing.T) {
 	"foobar"
 	"foo bar"
 	[1, 2];
-	{1: 2, "hello": true}`
+	{1: 2, "hello": true}
+	1 or 2 and 3`
 	tests := []struct {
 		expectedType    token.TokenType
 		expectedLiteral string
@@ -131,9 +133,15 @@ func TestNextToken(t *testing.T) {
 		{token.COLON, ":"},
 		{token.TRUE, "true"},
 		{token.RBRACE, "}"},
+
+		{token.INT, "1"},
+		{token.OR, "or"},
+		{token.INT, "2"},
+		{token.AND, "and"},
+		{token.INT, "3"},
+
 		{token.EOF, ""},
 	}
-	// {1: 2, "hello": true}
 	l := New(input)
 
 	for i, tt := range tests {

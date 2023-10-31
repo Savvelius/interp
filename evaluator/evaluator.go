@@ -322,6 +322,10 @@ func evalStringInfixExpression(operator string, left, right object.Object) objec
 
 func evalInfixExpression(operator string, left, right object.Object) object.Object {
 	switch {
+	case operator == "and":
+		return nativeBoolToBooleanObject(isTruthy(left) && isTruthy(right))
+	case operator == "or":
+		return nativeBoolToBooleanObject(isTruthy(left) || isTruthy(right))
 	case left.Type() != right.Type():
 		return newError("type mismatch: %s %s %s", left.Type(), operator, right.Type())
 

@@ -516,7 +516,7 @@ func testIntegerObject(t *testing.T, obj object.Object, expected int64) bool {
 	return true
 }
 
-func TestBangOperator(t *testing.T) {
+func TestBooleanOperators(t *testing.T) {
 	tests := []struct {
 		input    string
 		expected bool
@@ -527,6 +527,11 @@ func TestBangOperator(t *testing.T) {
 		{"!!true", true},
 		{"!!false", false},
 		{"!!5", true},
+
+		{"[1, 2, 3] and false", false},
+		{"[1, 2, 3] and false or {1: 3}", true},
+		{"true or false and 1", true},
+		{"false or false and 1", false},
 	}
 	for _, tt := range tests {
 		evaluated := testEval(tt.input)

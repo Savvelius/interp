@@ -378,6 +378,10 @@ func TestOperatorPrecedenceParsing(t *testing.T) {
 			"add(a * b[2], b[1], 2 * [1, 2][1])",
 			"add((a * (b[2])), (b[1]), (2 * ([1, 2][1])))",
 		},
+		{
+			"1 or 2 and 3 or true",
+			"((1 or (2 and 3)) or true)",
+		},
 	}
 
 	for _, tt := range tests {
@@ -774,6 +778,34 @@ func TestParsingHashLiteralsWithExpressions(t *testing.T) {
 			continue
 		}
 		testFunc(value)
+	}
+}
+
+func TestParsingAndOr(t *testing.T) {
+	inputs := []struct {
+		input string
+		left  int
+		op    string
+		right int
+	}{
+		{"1 or 2", 1, "or", 2},
+		{"1 and 2", 1, "and", 2},
+	}
+	for _, input := range inputs {
+		l := lexer.New(input.input)
+		p := New(l)
+		program := p.ParseProgram()
+		checkParserErrors(t, p)
+
+		if len(program.Statements) != 1 {
+			t.Errorf("expected program to have single statement, got=%d", len(program.Statements))
+		}
+		stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
+		if !ok {
+			t.Errorf("expected stmt to be ast.ExpressionStatement, got=%T", program.Statements[0])
+		}
+
+		testInfixExpression(t, stmt.Expression, input.left, input.op, input.right)
 	}
 }
 

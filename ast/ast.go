@@ -141,6 +141,33 @@ func (i *Identifier) String() string       { return i.Value }
 func (i *Identifier) expressionNode()      {}
 func (i *Identifier) TokenLiteral() string { return i.Token.Literal }
 
+// syntax:
+// class {
+// var1 = 10;
+// var2 = fn(self) {x + 10};
+// }
+type ClassLiteral struct {
+	Token     token.Token // token.CLASS
+	Variables []*Identifier
+}
+
+func (cl *ClassLiteral) expressionNode()      {}
+func (cl *ClassLiteral) TokenLiteral() string { return cl.Token.Literal }
+func (cl *ClassLiteral) String() string {
+	var out bytes.Buffer
+
+	variables := []string{}
+	for _, variable := range cl.Variables {
+		variables = append(variables, variable.String())
+	}
+	out.WriteString(cl.TokenLiteral())
+	out.WriteString("{ \n")
+	out.WriteString(strings.Join(variables, "\n"))
+	out.WriteString("\n}")
+
+	return out.String()
+}
+
 type FunctionLiteral struct {
 	Token      token.Token // token.FUNCTION
 	Parameters []*Identifier
